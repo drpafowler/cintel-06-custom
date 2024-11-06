@@ -4,3 +4,4 @@ shiny
 seaborn
 pathlib
 shinywidgets
+plotly
