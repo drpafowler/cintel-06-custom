@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import plotly.figure_factory as ff
 from shinywidgets import render_widget
 
+
+
 # Load data
 app_dir = Path(__file__).parent
 df = pd.read_csv(app_dir / "data" / "gapminder_full.csv")
@@ -30,18 +32,19 @@ with ui.sidebar(title="Filters"):
     unique_countries = df['country'].unique().tolist()
     ui.input_select("country", "Country", unique_countries, multiple=True, selected=unique_countries)
     ui.input_slider("year", "Year", min=1952, max=2007, value=[1952, 2007], step=1)
-    ui.input_select("xaxis", "X-axis", ["population", "year", "life_exp", "gdp_cap"], selected="gdp_cap")
+    ui.input_select("xaxis", "X-axis", ["population", "year", "life_exp", "gdp_cap"], selected="year")
     ui.input_select("yaxis", "Y-axis", ["population", "year", "life_exp", "gdp_cap"], selected="life_exp")
     ui.input_select("hue", "Hue", ["population", "year", "life_exp", "gdp_cap", "continent"], selected="population")
-
+    ui.input_dark_mode(mode="light")
 # Main content
 with ui.navset_pill(id="tab"):  
+
     with ui.nav_panel("Data Grid"):
-        "Data Grid"
 
         @render.data_frame
         def data_grid():
-            return render.DataGrid(filtered_data(), filters=True)
+            columns_to_show = [col for col in filtered_data().columns if col != 'iso_alpha']
+            return render.DataGrid(filtered_data()[columns_to_show], filters=True)
 
     with ui.nav_panel("Bar Charts"):
 
@@ -52,6 +55,7 @@ with ui.navset_pill(id="tab"):
                 x=input.xaxis(),
                 y=input.yaxis(),
                 color=input.hue(),
+                hover_data=["country"],
                 title="Interactive Bar Chart"
             )
             return fig
@@ -83,7 +87,6 @@ with ui.navset_pill(id="tab"):
             )
             return fig
     with ui.nav_panel("Maps"):
-
         @render_widget
         def plotly_map():
             fig = px.choropleth(
@@ -95,7 +98,16 @@ with ui.navset_pill(id="tab"):
             )
             return fig
     with ui.nav_panel("Statistics"):
-        "Statistics content"
+        @render_widget
+        def plotly_heatmap():
+            columns_of_interest = ['gdp_cap', 'life_exp', 'population']
+            corr = filtered_data()[columns_of_interest].corr()
+            fig = px.imshow(
+                corr,
+                text_auto=True,
+                title="Correlation Heatmap"
+            )
+            return fig
 
 
 
