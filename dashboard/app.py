@@ -14,7 +14,7 @@ from shinywidgets import render_widget
 
 # Load data
 app_dir = Path(__file__).parent
-df = pd.read_csv(app_dir / "data" / "gapminder_full.csv")
+df = pd.read_csv(app_dir / "gapminder_full.csv")
 ui.page_opts(title="GapMinder Life Expectancy", fillable=True)
 
 # filter data
