@@ -59,6 +59,11 @@ with ui.navset_pill(id="tab"):
                 title="Interactive Bar Chart"
             )
             return fig
+        ui.markdown(
+            """
+            **How to use this tab:** This tab shows a bar chart of the selected variable. Use the Continent, Country, and Year controls on the sidebar to select the data you want to analyze.  Select the x-axis (e.g. year), y-axis (e.g. population), and hue variables (e.g. life expectancy) from the dropdowns.  Hint: view this by individual countries or continents over the full range of years.
+            """
+        )
     with ui.nav_panel("Scatterplots"):
 
         @render_widget
@@ -71,6 +76,11 @@ with ui.navset_pill(id="tab"):
             title="Interactive Scatter Plot"
             )
             return fig
+        ui.markdown(
+            """
+            **How to use this tab:** This tab shows a scatter plot of the selected variables. Use the Continent, Country, and Year controls on the sidebar to select the data you want to analyze.  Select the x-axis, y-axis, and hue variables from the dropdowns.  Hint: try gdp per capita vs life expectancy, with hue by continent, to see how the two variables are related. You can also view the data by individual countries or continents to see how the variables change over time.
+            """
+        )
     with ui.nav_panel("Bubble Plots"):
         ui.input_select("size", "Size Variable", ["population", "year", "life_exp", "gdp_cap"], selected="population")
         ui.input_slider("size_scale", "Size Scale", min=1, max=100, value=10, step=1)
@@ -83,9 +93,15 @@ with ui.navset_pill(id="tab"):
                 color=input.hue(),
                 size=input.size(),
                 size_max=input.size_scale(),
+                hover_data=["country"],
                 title="Interactive Bar Chart"
             )
             return fig
+        ui.markdown(
+            """
+            **How to use this tab:** This tab shows a bubble plot of the selected variables. Use the Continent, Country, and Year controls on the sidebar to select the data you want to analyze.  Select the x-axis, y-axis, hue, and size variables from the dropdowns.  Hint: select a single year and try gdp per capita vs life expectancy, with hue by continent, and size by population (scale= 60ish), to see how the variables are related. You can also view the data by individual countries or continents to see how the variables change over time.
+            """
+        )
     with ui.nav_panel("Maps"):
         @render_widget
         def plotly_map():
@@ -97,7 +113,12 @@ with ui.navset_pill(id="tab"):
                 projection="equirectangular"
             )
             return fig
-    with ui.nav_panel("Statistics"):
+        ui.markdown(
+            """
+            **How to use this tab:** This tab shows a map of the world with the selected variable colored by country. Use the Continent, Country, and Year controls on the sidebar to select the data you want to analyze.  Display the variable that you want to view from the Hue dropdown.  Hint: view this by individual years of blocks of years to see how the variable changes over time.
+            """
+        )
+    with ui.nav_panel("Correlations"):
         @render_widget
         def plotly_heatmap():
             columns_of_interest = ['gdp_cap', 'life_exp', 'population']
@@ -108,6 +129,11 @@ with ui.navset_pill(id="tab"):
                 title="Correlation Heatmap"
             )
             return fig
+        ui.markdown(
+            """
+            **How to use this tab:** This tab shows the correlation between GDP per Capita, Life Expectancy, and Population. The values range from -1 to 1, where 1 means a perfect positive correlation, -1 means a perfect negative correlation, and 0 means no correlation.  Use the Continent, Country, and Year controls on the sidebar to select the data you want to analyze.  Hint: view this by individual countries or continents to make comparisons.
+            """
+        )
 
 
 
